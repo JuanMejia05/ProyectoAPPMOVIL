@@ -1,2 +1,0 @@
-# ProyectoAPPMOVIL
-Pantallas proyecto
