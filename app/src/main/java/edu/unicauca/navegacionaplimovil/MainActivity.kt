@@ -45,7 +45,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import edu.unicauca.navegacionaplimovil.ui.theme.NavegacionAplimovilTheme
 
-// Enumeración para las pantallas de navegación
 sealed class Pantallas(val route: String) {
     object Inicio : Pantallas("inicio")
     object Segunda : Pantallas("segunda")
@@ -83,7 +82,7 @@ fun Navegacion() {
                     Image(
                         painter = painterResource(id = R.drawable.logoapp),
                         contentDescription = "Imagen en la Pantalla de Inicio",
-                        modifier = Modifier.size(250.dp) // Aumenta el tamaño de la imagen de inicio
+                        modifier = Modifier.size(250.dp)
                     )
                 },
                 isFirstScreen = true
@@ -116,8 +115,8 @@ fun Navegacion() {
                             contentDescription = "Imagen Central",
                             modifier = Modifier
                                 .size(200.dp)
-                                .height(48.dp) // Aumenta la altura
-                                .weight(1f) // Permite que ocupe más espacio horizontal
+                                .height(48.dp)
+                                .weight(1f)
                                 .padding(horizontal = 4.dp),
                             contentScale = ContentScale.Fit
                         )
@@ -125,7 +124,7 @@ fun Navegacion() {
                             painter = painterResource(id = R.drawable.menu_removebg_preview),
                             contentDescription = "Imagen Derecha",
                             modifier = Modifier
-                                .size(width = 48.dp, height = 36.dp) // Aumenta el tamaño
+                                .size(width = 48.dp, height = 36.dp)
                                 .padding(start = 4.dp),
                             contentScale = ContentScale.Fit
                         )
@@ -139,7 +138,7 @@ fun Navegacion() {
                             painter = painterResource(id = R.drawable.herramientas3),
                             contentDescription = "Imagen Superior",
                             modifier = Modifier
-                                .size(250.dp) // Aumenta el tamaño
+                                .size(250.dp)
                                 .padding(bottom = 16.dp),
                             contentScale = ContentScale.Fit
                         )
@@ -154,7 +153,7 @@ fun Navegacion() {
                                 contentDescription = "Imagen Inferior 1",
                                 modifier = Modifier
                                     .weight(1f)
-                                    .height(120.dp) // Aumenta la altura
+                                    .height(120.dp)
                                     .padding(8.dp),
                                 contentScale = ContentScale.Fit
                             )
@@ -163,7 +162,7 @@ fun Navegacion() {
                                 contentDescription = "Imagen Inferior 2",
                                 modifier = Modifier
                                     .weight(1f)
-                                    .height(120.dp) // Aumenta la altura
+                                    .height(120.dp)
                                     .padding(8.dp),
                                 contentScale = ContentScale.Fit
                             )
@@ -190,7 +189,7 @@ fun Navegacion() {
                             painter = painterResource(id = R.drawable.iniciars_removebg_preview),
                             contentDescription = "Imagen Izquierda",
                             modifier = Modifier
-                                .size(width = 48.dp, height = 36.dp) // Aumenta el tamaño
+                                .size(width = 48.dp, height = 36.dp)
                                 .padding(end = 4.dp),
                             contentScale = ContentScale.Fit
                         )
@@ -207,7 +206,7 @@ fun Navegacion() {
                             contentDescription = "Imagen Derecha",
                             modifier = Modifier
                                 .height(50.dp)
-                                .size(width = 48.dp, height = 36.dp) // Aumenta el tamaño
+                                .size(width = 48.dp, height = 36.dp)
                                 .padding(start = 4.dp),
                             contentScale = ContentScale.Fit
                         )
@@ -216,7 +215,7 @@ fun Navegacion() {
                 },
                 imagenesInferiores = {
                     Image(
-                        painter = painterResource(id = R.drawable.herramientas2_removebg_preview), // Asegúrate de tener esta imagen en tus recursos
+                        painter = painterResource(id = R.drawable.herramientas2_removebg_preview),
                         contentDescription = "Nombre de la App",
                         modifier = Modifier.offset(y = -100.dp)
                             .fillMaxWidth()
@@ -260,7 +259,7 @@ fun PantallaBase(
                         offset = Offset(2f, 2f),
                         blurRadius = 3f
                     ),
-                    fontSize = 36.sp // Aumenta el tamaño del texto del encabezado
+                    fontSize = 36.sp
                 ),
                 color = Color(0xFFFFA500),
                 modifier = Modifier
@@ -282,7 +281,7 @@ fun PantallaBase(
                                 offset = Offset(2f, 2f),
                                 blurRadius = 3f
                             ),
-                            fontSize = 30.sp // Aumenta el tamaño del texto del título
+                            fontSize = 30.sp
                         ),
                         color = Color(0xFFFFA500),
                         modifier = Modifier
@@ -311,7 +310,7 @@ fun PantallaBase(
                             offset = Offset(2f, 2f),
                             blurRadius = 3f
                         ),
-                        fontSize = 24.sp // Aumenta el tamaño del texto del eslogan
+                        fontSize = 24.sp
                     ),
                     color = Color(0xFFFFA500),
                     modifier = Modifier
@@ -328,14 +327,14 @@ fun PantallaBase(
             imagenesInferiores?.invoke()
 
             onBotonClick?.let {
-                Button(onClick = it, modifier = Modifier.fillMaxWidth().height(56.dp)) { // Aumenta la altura del botón
-                    Text(text = textoBoton ?: "Continuar", color = Color.White, fontSize = 18.sp) // Aumenta el tamaño del texto del botón
+                Button(onClick = it, modifier = Modifier.fillMaxWidth().height(56.dp)) {
+                    Text(text = textoBoton ?: "Continuar", color = Color.White, fontSize = 18.sp) // Au
                 }
             }
             if (mostrarBotonAtras) {
                 Spacer(modifier = Modifier.height(12.dp))
-                Button(onClick = { irAtras?.invoke() }, modifier = Modifier.fillMaxWidth().height(56.dp)) { // Aumenta la altura del botón
-                    Text(text = "Atrás", color = Color.White, fontSize = 18.sp) // Aumenta el tamaño del texto del botón
+                Button(onClick = { irAtras?.invoke() }, modifier = Modifier.fillMaxWidth().height(56.dp)) {
+                    Text(text = "Atrás", color = Color.White, fontSize = 18.sp)
                 }
             }
         }
