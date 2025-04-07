@@ -5,8 +5,17 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -14,7 +23,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.*
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import edu.unicauca.navegacionaplimovil.ui.theme.NavegacionAplimovilTheme
 
 class MainActivity : ComponentActivity() {
@@ -41,25 +52,58 @@ fun PantallaBase(
     onBotonClick: (() -> Unit)? = null,
     mostrarBotonAtras: Boolean = false,
     irAtras: (() -> Unit)? = null,
-    contenidoExtra: @Composable (() -> Unit)? = null
+    contenidoExtra: @Composable (() -> Unit)? = null,
+    isFirstScreen: Boolean = false // New parameter to identify the first screen
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorFondo),
+            .background(colorFondo)
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = if (isFirstScreen) Arrangement.Center else Arrangement.SpaceBetween // Conditional arrangement
     ) {
-        Text(text = titulo, style = MaterialTheme.typography.headlineMedium)
-        contenidoExtra?.invoke()
-        Spacer(modifier = Modifier.height(16.dp))
-
-        onBotonClick?.let {
-            Button(onClick = it) { Text(text = textoBoton ?: "Continuar") }
+        if (!isFirstScreen) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = titulo,
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = Color.Black
+                )
+                contenidoExtra?.invoke()
+            }
+        } else {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    text = titulo,
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = Color.Black
+                )
+                contenidoExtra?.invoke()
+            }
         }
-        if (mostrarBotonAtras) {
-            Spacer(modifier = Modifier.height(8.dp))
-            Button(onClick = { irAtras?.invoke() }) { Text(text = "Atrás") }
+
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            onBotonClick?.let {
+                Button(onClick = it, modifier = Modifier.fillMaxWidth()) {
+                    Text(text = textoBoton ?: "Continuar", color = Color.White)
+                }
+            }
+            if (mostrarBotonAtras) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Button(onClick = { irAtras?.invoke() }, modifier = Modifier.fillMaxWidth()) {
+                    Text(text = "Atrás", color = Color.White)
+                }
+            }
         }
     }
 }
@@ -71,10 +115,17 @@ fun Navegacion() {
     NavHost(navController = navController, startDestination = Pantallas.Inicio.route) {
         composable(Pantallas.Inicio.route) {
             PantallaBase(
-                titulo = "Bienvenidos",
-                colorFondo = Color(0xFFFFCCBC),
+                titulo = "TECHOAPP",
+                colorFondo = Color(0xFFBBDEFB),
                 textoBoton = "Iniciar",
-                onBotonClick = { navController.navigate(Pantallas.Segunda.route) }
+                onBotonClick = { navController.navigate(Pantallas.Segunda.route) },
+                contenidoExtra = {
+                    Image(
+                        painter = painterResource(id = R.drawable.logoapp),
+                        contentDescription = "Imagen en la Pantalla de Inicio",
+                    )
+                },
+                isFirstScreen = true // Indicate that this is the first screen
             )
         }
         composable(Pantallas.Segunda.route) {
@@ -90,29 +141,11 @@ fun Navegacion() {
         composable(Pantallas.Tercera.route) {
             PantallaBase(
                 titulo = "Tercera Pantalla",
-                colorFondo = Color(0xFFC8E6C9),
-                textoBoton = "Siguiente",
-                onBotonClick = { navController.navigate(Pantallas.Cuarta.route) },
-                mostrarBotonAtras = true,
-                irAtras = { navController.popBackStack() }
-            )
-        }
-        composable(Pantallas.Cuarta.route) {
-            PantallaBase(
-                titulo = "Cuarta Pantalla",
-                colorFondo = Color(0xFFFFF176),
+                colorFondo = Color(0xFFBBDEFB),
                 textoBoton = "Ir al Inicio",
                 onBotonClick = { navController.navigate(Pantallas.Inicio.route) },
                 mostrarBotonAtras = true,
-                irAtras = { navController.popBackStack() },
-                contenidoExtra = {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                        contentDescription = "Imagen en la Cuarta Pantalla",
-
-
-                    )
-                }
+                irAtras = { navController.popBackStack() }
             )
         }
     }
@@ -122,7 +155,6 @@ sealed class Pantallas(val route: String) {
     object Inicio : Pantallas("inicio")
     object Segunda : Pantallas("segunda")
     object Tercera : Pantallas("tercera")
-    object Cuarta : Pantallas("cuarta")
 }
 
 @Preview(showBackground = true)
