@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
@@ -53,7 +54,7 @@ fun PantallaBase(
     mostrarBotonAtras: Boolean = false,
     irAtras: (() -> Unit)? = null,
     contenidoExtra: @Composable (() -> Unit)? = null,
-    isFirstScreen: Boolean = false // New parameter to identify the first screen
+    isFirstScreen: Boolean = false
 ) {
     Column(
         modifier = Modifier
@@ -61,8 +62,19 @@ fun PantallaBase(
             .background(colorFondo)
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = if (isFirstScreen) Arrangement.Center else Arrangement.SpaceBetween // Conditional arrangement
+        verticalArrangement = if (isFirstScreen) Arrangement.Center else Arrangement.SpaceBetween
     ) {
+        if (!isFirstScreen) {
+            Text(
+                text = "TECHOAPP",
+                style = MaterialTheme.typography.headlineMedium,
+                color = Color.Black,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
+                textAlign = TextAlign.Center
+            )
+        }
         if (!isFirstScreen) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -80,12 +92,14 @@ fun PantallaBase(
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier.weight(1f)
             ) {
-                Text(
-                    text = titulo,
-                    style = MaterialTheme.typography.headlineMedium,
-                    color = Color.Black
-                )
                 contenidoExtra?.invoke()
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "Tu tienda electrónica de confianza",
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = Color.Black,
+                    textAlign = TextAlign.Center
+                )
             }
         }
 
@@ -115,7 +129,7 @@ fun Navegacion() {
     NavHost(navController = navController, startDestination = Pantallas.Inicio.route) {
         composable(Pantallas.Inicio.route) {
             PantallaBase(
-                titulo = "TECHOAPP",
+                titulo = "", // Sin titulo
                 colorFondo = Color(0xFFBBDEFB),
                 textoBoton = "Iniciar",
                 onBotonClick = { navController.navigate(Pantallas.Segunda.route) },
@@ -125,7 +139,7 @@ fun Navegacion() {
                         contentDescription = "Imagen en la Pantalla de Inicio",
                     )
                 },
-                isFirstScreen = true // Indicate that this is the first screen
+                isFirstScreen = true
             )
         }
         composable(Pantallas.Segunda.route) {
