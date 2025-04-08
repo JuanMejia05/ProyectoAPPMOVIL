@@ -3,6 +3,7 @@ package edu.unicauca.navegacionaplimovil
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,7 +16,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.*
@@ -24,15 +24,25 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.ui.draw.clip
 import androidx.navigation.NavHostController
 import androidx.compose.material.icons.filled.*
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.runtime.*
+
+
+
+
 
 
 @Composable
@@ -43,6 +53,7 @@ fun PantallaBase(
     onBotonClick: (() -> Unit)? = null,
     mostrarBotonAtras: Boolean = false,
     irAtras: (() -> Unit)? = null,
+    contenidoSuperior: @Composable (() -> Unit)? = null, // NUEVA ranura aquí
     contenidoExtra: @Composable (() -> Unit)? = null,
     verticalArrangement: Arrangement.Vertical = Arrangement.Center,
     barraInferior: @Composable (() -> Unit)? = null
@@ -66,11 +77,13 @@ fun PantallaBase(
                     text = titulo,
                     style = MaterialTheme.typography.headlineMedium.copy(
                         fontStyle = FontStyle.Italic,
-                        fontFamily = FontFamily.Monospace // fuente parecida a Comic Sans
+                        fontFamily = FontFamily.Monospace
                     )
                 )
                 Spacer(modifier = Modifier.height(16.dp))
             }
+
+            contenidoSuperior?.invoke() // 👈 Se dibuja justo debajo del título
 
             contenidoExtra?.invoke()
 
@@ -91,12 +104,13 @@ fun PantallaBase(
 
 
 
-@Composable
 
+@Composable
 fun Navegacion2() {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = Pantallas.Inicio.route) {
+
+    NavHost(navController = navController, startDestination = Pantallas.Quinta.route) {
         composable(Pantallas.Inicio.route) {
             PantallaBase(
                 titulo = "TECHNO APP",
@@ -144,7 +158,6 @@ fun Navegacion2() {
                 }
             )
         }
-
         composable(Pantallas.Segunda.route) {
             PantallaBase(
                 titulo = "TECHNO APP",
@@ -278,7 +291,7 @@ fun Navegacion2() {
 
                 verticalArrangement = Arrangement.Top, // ← esto soluciona el centrado
                 contenidoExtra = {
-                    BarraDeBusqueda()
+                    BarraDeBusquedaConResultados()
 
                     val ofertas = listOf(
                         "10% Descuento", "15% Descuento", "20% Descuento","20% Descuento",
@@ -351,27 +364,83 @@ fun Navegacion2() {
         }
         composable(Pantallas.Cuarta.route) {
             PantallaBase(
-                titulo = "Perfil del Usuario",
+                titulo = "Créditos",
                 colorFondo = Color(0xFFE3F2FD), // azul muy claro
 
                 contenidoExtra = {
                     Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState()),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_logo_foreground), // tu imagen en drawable
-                            contentDescription = "Foto de perfil",
-                            modifier = Modifier
-                                .size(120.dp)
-
-                        )
                         Spacer(modifier = Modifier.height(16.dp))
-                        Text("Nombre: Jorge Erazo", style = MaterialTheme.typography.bodyLarge)
-                        Text("Correo: jorge@example.com", style = MaterialTheme.typography.bodyMedium)
-                        Text("Teléfono: +57 3001234567", style = MaterialTheme.typography.bodyMedium)
+
+                        Text(
+                            text = "Aplicación creada por:",
+                            style = MaterialTheme.typography.titleLarge
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        // Primer creador
+                        Text("• Jorge Andrés Erazo Sánchez", style = MaterialTheme.typography.bodyLarge)
+                        Text("Rol: Desarrollador Principal", style = MaterialTheme.typography.bodyMedium)
+                        Text("Correo: jorge@example.com", style = MaterialTheme.typography.bodySmall)
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        // Segundo creador (ejemplo, puedes duplicar esto si hay más)
+                        Text("• Mariana López Torres", style = MaterialTheme.typography.bodyLarge)
+                        Text("Rol: Diseñadora UI/UX", style = MaterialTheme.typography.bodyMedium)
+                        Text("Correo: mariana@example.com", style = MaterialTheme.typography.bodySmall)
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        // Otro participante
+                        Text("• Carlos Pérez Ramírez", style = MaterialTheme.typography.bodyLarge)
+                        Text("Rol: Tester y QA", style = MaterialTheme.typography.bodyMedium)
+                        Text("Correo: carlos@example.com", style = MaterialTheme.typography.bodySmall)
+
+                        Spacer(modifier = Modifier.height(32.dp))
+
+                        Text(
+                            text = "Versión 1.0 - Abril 2025",
+                            style = MaterialTheme.typography.bodySmall.copy(fontStyle = FontStyle.Italic)
+                        )
                     }
                 },
+
                 barraInferior = {
+                    BarraNavegacionInferiorConBackForward(navController)
+                }
+            )
+        }
+        composable(Pantallas.Quinta.route) {
+            PantallaBase(
+                titulo = "Novedades",
+                colorFondo = Color(0xFFE3F2FD),
+
+                contenidoSuperior = {
+                    BarraDeBusquedaConResultados()
+                },
+
+                contenidoExtra = {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(bottom = 72.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Spacer(modifier = Modifier.height(16.dp))
+                        NovedadesContent()
+                        Spacer(modifier = Modifier.height(32.dp))
+                    }
+                    RanuraImagenInferior()
+                },
+
+
+                barraInferior = {
+
                     BarraNavegacionInferiorConBackForward(navController)
                 }
             )
@@ -381,11 +450,14 @@ fun Navegacion2() {
     }
 }
 
+
 sealed class Pantallas(val route: String, val titulo: String, val icono: ImageVector) {
-    object Inicio : Pantallas("inicio", "Salir", Icons.Filled.AccountBox)
+    object Inicio : Pantallas("inicio", "Login", Icons.Filled.AccountBox)
     object Segunda : Pantallas("segunda", "Ofertas", Icons.Filled.CheckCircle)
     object Tercera : Pantallas("tercera", "Menú", Icons.Filled.Menu)
-    object Cuarta : Pantallas("cuarta", "Perfil", Icons.Filled.Person)
+    object Cuarta : Pantallas("cuarta", "Creditos", Icons.Filled.Person)
+    object Quinta : Pantallas("quinta", "Novedades", Icons.Filled.Info)
+
 }
 
 @Preview(showBackground = true)
@@ -395,31 +467,58 @@ fun PreviewInicial() {
         PantallaBase(titulo = "Bienvenidos", colorFondo = Color.White)
     }
 }
+
 @Composable
-fun BarraDeBusqueda(
-    modifier: Modifier = Modifier
-){
-    TextField(
-        value = "",
-        onValueChange = {},
-        leadingIcon = {
-            Icon(
-                imageVector = Icons.Default.Search,
-                contentDescription = null
+fun BarraDeBusquedaConResultados() {
+    // Lista simulada de datos para buscar
+    val datos = listOf("Jorge Erazo", "Juan Pérez", "Juliana López", "José Martínez", "Jennifer Ruiz")
+
+    // Estado para el texto de búsqueda
+    var textoBusqueda by remember { mutableStateOf("") }
+
+    // Resultado de filtrar la lista
+    val resultadosFiltrados = remember(textoBusqueda) {
+        if (textoBusqueda.isNotBlank()) {
+            datos.filter { it.contains(textoBusqueda, ignoreCase = true) }
+        } else {
+            emptyList()
+        }
+    }
+
+    Column(modifier = Modifier.padding(16.dp)) {
+        TextField(
+            value = textoBusqueda,
+            onValueChange = { textoBusqueda = it },
+            leadingIcon = {
+                Icon(imageVector = Icons.Default.Search, contentDescription = null)
+            },
+            placeholder = { Text("Buscar...") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(min = 56.dp),
+            colors = TextFieldDefaults.colors(
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                focusedContainerColor = MaterialTheme.colorScheme.surface
             )
-        },
-        placeholder = {
-            Text(text= stringResource(R.string.search_txt))
-        },
-        colors = TextFieldDefaults.colors(
-            unfocusedContainerColor = MaterialTheme.colorScheme.surface,
-            focusedContainerColor = MaterialTheme.colorScheme.surface
-        ),
-        modifier = modifier
-            .fillMaxWidth()
-            .heightIn(min = 56.dp)
-    )
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Mostrar los resultados
+        LazyColumn {
+            items(resultadosFiltrados) { resultado ->
+                Text(
+                    text = resultado,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                )
+                Divider()
+            }
+        }
+    }
 }
+
 //BARRA NAVEGACION INFERIOR
 @Composable
 fun BarraNavegacionInferiorConBackForward(navController: NavHostController) {
@@ -427,7 +526,8 @@ fun BarraNavegacionInferiorConBackForward(navController: NavHostController) {
         Pantallas.Inicio,
         Pantallas.Segunda,
         Pantallas.Tercera,
-        Pantallas.Cuarta
+        Pantallas.Cuarta,
+        Pantallas.Quinta
     )
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -476,5 +576,68 @@ fun RanuraImagenInferior() {
                 .clip(MaterialTheme.shapes.medium)
         )
     }
+}
+
+@Composable
+fun NovedadesContent() {
+    Column(
+        modifier = Modifier
+            .padding(16.dp)
+            .background(Color(0xFFE0F7FA)) // Azul claro similar al fondo
+            .border(1.dp, Color.Black)
+    ) {
+        // Título
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color(0xFFFFA726)), // Naranja suave
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "NOVEDADES",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(8.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Parte superior: 2 imágenes lado a lado
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            ImagenNovedad(painterResource(id = R.drawable.contenedornovedades3))
+            ImagenNovedad(painterResource(id = R.drawable.contenedornovedades2))
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Imagen inferior
+        ImagenNovedad(
+            painter = painterResource(id = R.drawable.contenedornovedades),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(160.dp)
+                .padding(horizontal = 8.dp)
+        )
+    }
+}
+
+@Composable
+fun ImagenNovedad(
+    painter: Painter,
+    modifier: Modifier = Modifier
+        .size(100.dp)
+        .border(1.dp, Color.Black)
+        .padding(4.dp)
+) {
+    Image(
+        painter = painter,
+        contentDescription = null,
+        contentScale = ContentScale.Crop,
+        modifier = modifier
+    )
 }
 
