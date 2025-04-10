@@ -44,7 +44,6 @@ import androidx.compose.runtime.*
 
 
 
-
 @Composable
 fun PantallaBase(
     titulo: String,
@@ -53,7 +52,7 @@ fun PantallaBase(
     onBotonClick: (() -> Unit)? = null,
     mostrarBotonAtras: Boolean = false,
     irAtras: (() -> Unit)? = null,
-    contenidoSuperior: @Composable (() -> Unit)? = null, // NUEVA ranura aquí
+    contenidoSuperior: @Composable (() -> Unit)? = null,
     contenidoExtra: @Composable (() -> Unit)? = null,
     verticalArrangement: Arrangement.Vertical = Arrangement.Center,
     barraInferior: @Composable (() -> Unit)? = null
@@ -83,7 +82,7 @@ fun PantallaBase(
                 Spacer(modifier = Modifier.height(16.dp))
             }
 
-            contenidoSuperior?.invoke() // 👈 Se dibuja justo debajo del título
+            contenidoSuperior?.invoke() //
 
             contenidoExtra?.invoke()
 
@@ -110,7 +109,7 @@ fun Navegacion2() {
     val navController = rememberNavController()
 
 
-    NavHost(navController = navController, startDestination = Pantallas.Quinta.route) {
+    NavHost(navController = navController, startDestination = Pantallas.Inicio.route) {
         composable(Pantallas.Inicio.route) {
             PantallaBase(
                 titulo = "TECHNO APP",
@@ -164,7 +163,7 @@ fun Navegacion2() {
                 colorFondo = Color(0xFFBBDEFB),
                 verticalArrangement = Arrangement.Top,
                 contenidoExtra = {
-                   // BarraDeBusqueda()
+                    // BarraDeBusqueda()
                     //Aquí va tu contenido (Column con textos, LazyColumn, LazyHorizontalGrid, etc.)
                     Column(
                         modifier = Modifier
@@ -181,16 +180,16 @@ fun Navegacion2() {
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
                         val elementos = listOf(
-                            "Elemento 1", "Elemento 2", "Elemento 3",
-                            "Elemento 4", "Elemento 5", "Elemento 6",
-                            "Elemento 7", "Elemento 8"
+                            "Protoboard 2x1 ", "Cable %50 dcto ", "Microcontrolador ",
+                            "Pinzas %20 dcto", "Baterias ", "Transistores",
+                            "Resistencias 70% dcto ", "Fuentes"
                         )
 
                         LazyColumn(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .wrapContentHeight()
-                                .heightIn(max = 250.dp), // limita altura si hay muchos
+                                .heightIn(max = 250.dp), //
                             contentPadding = PaddingValues(8.dp),
                             verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
@@ -383,64 +382,31 @@ fun Navegacion2() {
 
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        // Primer creador
                         Text("• Jorge Andrés Erazo Sánchez", style = MaterialTheme.typography.bodyLarge)
                         Text("Rol: Desarrollador Principal", style = MaterialTheme.typography.bodyMedium)
                         Text("Correo: jorge@example.com", style = MaterialTheme.typography.bodySmall)
                         Spacer(modifier = Modifier.height(12.dp))
 
-                        // Segundo creador (ejemplo, puedes duplicar esto si hay más)
-                        Text("• Mariana López Torres", style = MaterialTheme.typography.bodyLarge)
-                        Text("Rol: Diseñadora UI/UX", style = MaterialTheme.typography.bodyMedium)
-                        Text("Correo: mariana@example.com", style = MaterialTheme.typography.bodySmall)
+                        Text("• Juan Camilo Mejia Mora", style = MaterialTheme.typography.bodyLarge)
+                        Text("Rol: Diseñador UI/UX", style = MaterialTheme.typography.bodyMedium)
+                        Text("Correo: juan@example.com", style = MaterialTheme.typography.bodySmall)
 
                         Spacer(modifier = Modifier.height(12.dp))
 
-                        // Otro participante
-                        Text("• Carlos Pérez Ramírez", style = MaterialTheme.typography.bodyLarge)
+                        Text("• Javier Mauricio Villano Burbano", style = MaterialTheme.typography.bodyLarge)
                         Text("Rol: Tester y QA", style = MaterialTheme.typography.bodyMedium)
-                        Text("Correo: carlos@example.com", style = MaterialTheme.typography.bodySmall)
+                        Text("Correo: maurice@example.com", style = MaterialTheme.typography.bodySmall)
 
                         Spacer(modifier = Modifier.height(32.dp))
 
                         Text(
-                            text = "Versión 1.0 - Abril 2025",
+                            text = "Versión de aplicación 1.0 - Abril 2025",
                             style = MaterialTheme.typography.bodySmall.copy(fontStyle = FontStyle.Italic)
                         )
                     }
                 },
 
                 barraInferior = {
-                    BarraNavegacionInferiorConBackForward(navController)
-                }
-            )
-        }
-        composable(Pantallas.Quinta.route) {
-            PantallaBase(
-                titulo = "Novedades",
-                colorFondo = Color(0xFFE3F2FD),
-
-                contenidoSuperior = {
-                    BarraDeBusquedaConResultados()
-                },
-
-                contenidoExtra = {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(bottom = 72.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Spacer(modifier = Modifier.height(16.dp))
-                        NovedadesContent()
-                        Spacer(modifier = Modifier.height(32.dp))
-                    }
-                    RanuraImagenInferior()
-                },
-
-
-                barraInferior = {
-
                     BarraNavegacionInferiorConBackForward(navController)
                 }
             )
@@ -456,7 +422,7 @@ sealed class Pantallas(val route: String, val titulo: String, val icono: ImageVe
     object Segunda : Pantallas("segunda", "Ofertas", Icons.Filled.CheckCircle)
     object Tercera : Pantallas("tercera", "Menú", Icons.Filled.Menu)
     object Cuarta : Pantallas("cuarta", "Creditos", Icons.Filled.Person)
-    object Quinta : Pantallas("quinta", "Novedades", Icons.Filled.Info)
+
 
 }
 
@@ -527,7 +493,7 @@ fun BarraNavegacionInferiorConBackForward(navController: NavHostController) {
         Pantallas.Segunda,
         Pantallas.Tercera,
         Pantallas.Cuarta,
-        Pantallas.Quinta
+
     )
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -576,68 +542,5 @@ fun RanuraImagenInferior() {
                 .clip(MaterialTheme.shapes.medium)
         )
     }
-}
-
-@Composable
-fun NovedadesContent() {
-    Column(
-        modifier = Modifier
-            .padding(16.dp)
-            .background(Color(0xFFE0F7FA)) // Azul claro similar al fondo
-            .border(1.dp, Color.Black)
-    ) {
-        // Título
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color(0xFFFFA726)), // Naranja suave
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = "NOVEDADES",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(8.dp)
-            )
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Parte superior: 2 imágenes lado a lado
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            ImagenNovedad(painterResource(id = R.drawable.contenedornovedades3))
-            ImagenNovedad(painterResource(id = R.drawable.contenedornovedades2))
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Imagen inferior
-        ImagenNovedad(
-            painter = painterResource(id = R.drawable.contenedornovedades),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(160.dp)
-                .padding(horizontal = 8.dp)
-        )
-    }
-}
-
-@Composable
-fun ImagenNovedad(
-    painter: Painter,
-    modifier: Modifier = Modifier
-        .size(100.dp)
-        .border(1.dp, Color.Black)
-        .padding(4.dp)
-) {
-    Image(
-        painter = painter,
-        contentDescription = null,
-        contentScale = ContentScale.Crop,
-        modifier = modifier
-    )
 }
 
