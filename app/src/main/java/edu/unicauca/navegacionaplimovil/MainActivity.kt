@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,14 +32,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight // Import necesario para Bold
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.sp             // Import necesario para sp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -77,18 +80,36 @@ fun Navegacion() {
                 textoBoton = "Iniciar",
                 onBotonClick = { navController.navigate(Pantallas.Segunda.route) },
                 contenidoExtra = {
-                    Image(
-                        painter = painterResource(id = R.drawable.logoapp),
-                        contentDescription = "Imagen en la Pantalla de Inicio",
-                        modifier = Modifier.size(250.dp)
-                    )
+
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Image(
+                            painter = painterResource(id = R.drawable.logoapp),
+                            contentDescription = "Imagen en la Pantalla de Inicio",
+                            modifier = Modifier.size(250.dp)
+                        )
+                        Spacer(modifier = Modifier.height(24.dp))
+                        Text(
+                            text = "TU TIENDA ELECTRÓNICA DE CONFIANZA",
+                            style = MaterialTheme.typography.headlineMedium.copy(
+                                shadow = Shadow(
+                                    color = Color.Gray,
+                                    offset = Offset(2f, 2f),
+                                    blurRadius = 3f
+                                ),
+                                fontSize = 24.sp
+                            ),
+                            color = Color(0xFFFFA500),
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            textAlign = TextAlign.Center
+                        )
+                    }
                 },
                 isFirstScreen = true
             )
         }
         composable(Pantallas.Segunda.route) {
             PantallaBase(
-                titulo = "", // El título se gestionará dentro de contenidoSuperior ahora
+                titulo = "",
                 colorFondo = Color(0xFFBBDEFB),
                 mostrarBotonAtras = true,
                 irAtras = { navController.popBackStack() },
@@ -105,8 +126,7 @@ fun Navegacion() {
                                 fontSize = 30.sp
                             ),
                             color = Color(0xFFFFA500),
-                            modifier = Modifier
-                                .padding(bottom = 8.dp),
+                            modifier = Modifier.padding(bottom = 8.dp),
                             textAlign = TextAlign.Center
                         )
                         Row(
@@ -128,7 +148,7 @@ fun Navegacion() {
                                 onValueChange = { texto = it },
                                 leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
                                 label = { Text("Buscar") },
-                                modifier = Modifier.offset(y = 0.dp), // Se ajusta el offset
+                                modifier = Modifier.offset(y = 0.dp),
                             )
                             Image(
                                 painter = painterResource(id = R.drawable.menu),
@@ -141,19 +161,38 @@ fun Navegacion() {
                             )
                         }
                     }
-                    Spacer(modifier = Modifier.height(250.dp)) // Se reduce el Spacer
+                    Spacer(modifier = Modifier.height(250.dp))
                 },
+
                 imagenesInferiores = {
-                    Image(
-                        painter = painterResource(id = R.drawable.herramientas2_removebg_preview),
-                        contentDescription = "Nombre de la App",
+                    Column(
                         modifier = Modifier
-                            .offset(y = -100.dp)
                             .fillMaxWidth()
-                            .height(180.dp) // Aumenta la altura
+                            .offset(y = -100.dp)
                             .padding(horizontal = 16.dp),
-                        contentScale = ContentScale.Fit
-                    )
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        // --- Texto añadido ---
+                        Text(
+                            text = "NUEVOS MATERIALES",
+                            color = Color.Blue,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 20.sp
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Image(
+                            painter = painterResource(id = R.drawable.herramientas2_removebg_preview),
+                            contentDescription = "Imagen Herramientas",
+                            modifier = Modifier
+                                .height(180.dp)
+                                .border(
+                                    width = 4.dp,
+                                    color = Color(0xFFFFA500),
+                                    shape = RectangleShape
+                                ),
+                            contentScale = ContentScale.Fit
+                        )
+                    }
                 }
             )
         }
@@ -207,23 +246,7 @@ fun PantallaBase(
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier.weight(1f)
             ) {
-                contenidoExtra?.invoke()
-                Spacer(modifier = Modifier.height(24.dp))
-                Text(
-                    text = "TU TIENDA ELECTRÓNICA DE CONFIANZA",
-                    style = MaterialTheme.typography.headlineMedium.copy(
-                        shadow = Shadow(
-                            color = Color.Gray,
-                            offset = Offset(2f, 2f),
-                            blurRadius = 3f
-                        ),
-                        fontSize = 24.sp
-                    ),
-                    color = Color(0xFFFFA500),
-                    modifier = Modifier
-                        .padding(16.dp),
-                    textAlign = TextAlign.Center
-                )
+                contenidoExtra?.invoke() // Llama al lambda con Logo y Texto
             }
         }
 
@@ -231,11 +254,12 @@ fun PantallaBase(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            imagenesInferiores?.invoke()
+            imagenesInferiores?.invoke() // Llama al lambda con la Column (Text + Image) o nada
 
+            // Botones
             onBotonClick?.let {
                 Button(onClick = it, modifier = Modifier.fillMaxWidth().height(56.dp)) {
-                    Text(text = textoBoton ?: "Continuar", color = Color.White, fontSize = 18.sp) // Au
+                    Text(text = textoBoton ?: "Continuar", color = Color.White, fontSize = 18.sp)
                 }
             }
             if (mostrarBotonAtras) {
@@ -256,13 +280,30 @@ fun InicioPreview() {
             titulo = "",
             colorFondo = Color(0xFFBBDEFB),
             textoBoton = "Iniciar",
-            onBotonClick = { /*TODO*/ },
+            onBotonClick = { },
             contenidoExtra = {
-                Image(
-                    painter = painterResource(id = R.drawable.logoapp),
-                    contentDescription = "Imagen en la Pantalla de Inicio",
-                    modifier = Modifier.size(250.dp)
-                )
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Image(
+                        painter = painterResource(id = R.drawable.logoapp),
+                        contentDescription = "Imagen en la Pantalla de Inicio",
+                        modifier = Modifier.size(250.dp)
+                    )
+                    Spacer(modifier = Modifier.height(24.dp))
+                    Text(
+                        text = "TU TIENDA ELECTRÓNICA DE CONFIANZA",
+                        style = MaterialTheme.typography.headlineMedium.copy(
+                            shadow = Shadow(
+                                color = Color.Gray,
+                                offset = Offset(2f, 2f),
+                                blurRadius = 3f
+                            ),
+                            fontSize = 24.sp
+                        ),
+                        color = Color(0xFFFFA500),
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        textAlign = TextAlign.Center
+                    )
+                }
             },
             isFirstScreen = true
         )
@@ -274,12 +315,12 @@ fun InicioPreview() {
 fun SegundaPantallaPreview() {
     NavegacionAplimovilTheme {
         PantallaBase(
-            titulo = "", // El título se gestiona dentro de contenidoSuperior para la preview
+            titulo = "",
             colorFondo = Color(0xFFBBDEFB),
-            textoBoton = "Ir al Inicio",
-            onBotonClick = { /*TODO*/ },
+            textoBoton = "Continuar (Preview)",
+            onBotonClick = { },
             mostrarBotonAtras = true,
-            irAtras = { /*TODO*/ },
+            irAtras = { },
             contenidoSuperior = {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
@@ -293,8 +334,7 @@ fun SegundaPantallaPreview() {
                             fontSize = 30.sp
                         ),
                         color = Color(0xFFFFA500),
-                        modifier = Modifier
-                            .padding(bottom = 8.dp),
+                        modifier = Modifier.padding(bottom = 8.dp),
                         textAlign = TextAlign.Center
                     )
                     Row(
@@ -332,16 +372,33 @@ fun SegundaPantallaPreview() {
                 Spacer(modifier = Modifier.height(250.dp))
             },
             imagenesInferiores = {
-                Image(
-                    painter = painterResource(id = R.drawable.herramientas2_removebg_preview),
-                    contentDescription = "Nombre de la App",
+                Column(
                     modifier = Modifier
-                        .offset(y = -150.dp)
                         .fillMaxWidth()
-                        .height(185.dp)
+                        .offset(y = -100.dp)
                         .padding(horizontal = 16.dp),
-                    contentScale = ContentScale.Fit
-                )
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "NUEVOS MATERIALES",
+                        color = Color.Blue,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Image(
+                        painter = painterResource(id = R.drawable.herramientas2_removebg_preview),
+                        contentDescription = "Imagen Herramientas con borde (Preview)",
+                        modifier = Modifier
+                            .height(180.dp)
+                            .border(
+                                width = 4.dp,
+                                color = Color(0xFFFFA500),
+                                shape = RectangleShape
+                            ),
+                        contentScale = ContentScale.Fit
+                    )
+                }
             }
         )
     }
