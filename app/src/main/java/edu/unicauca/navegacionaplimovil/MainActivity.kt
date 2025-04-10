@@ -23,7 +23,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,7 +47,6 @@ import edu.unicauca.navegacionaplimovil.ui.theme.NavegacionAplimovilTheme
 sealed class Pantallas(val route: String) {
     object Inicio : Pantallas("inicio")
     object Segunda : Pantallas("segunda")
-    object Tercera : Pantallas("tercera")
 }
 
 class MainActivity : ComponentActivity() {
@@ -90,134 +88,67 @@ fun Navegacion() {
         }
         composable(Pantallas.Segunda.route) {
             PantallaBase(
-                titulo = "Novedades",
+                titulo = "", // El título se gestionará dentro de contenidoSuperior ahora
                 colorFondo = Color(0xFFBBDEFB),
-                textoBoton = "Siguiente",
-                onBotonClick = { navController.navigate(Pantallas.Tercera.route) },
                 mostrarBotonAtras = true,
                 irAtras = { navController.popBackStack() },
                 contenidoSuperior = {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceAround,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.iniciars_removebg_preview),
-                            contentDescription = "Imagen Izquierda",
-                            modifier = Modifier.offset(x= 20.dp, y = -5.dp)
-                                .size(width = 48.dp, height = 36.dp) // Aumenta el tamaño
-                                .padding(end = 4.dp),
-                            contentScale = ContentScale.Fit
-                        )
-                        Image(
-                            painter = painterResource(id = R.drawable.busqueda),
-                            contentDescription = "Imagen Central",
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(
+                            text = "Novedades",
+                            style = MaterialTheme.typography.headlineMedium.copy(
+                                shadow = Shadow(
+                                    color = Color.Gray,
+                                    offset = Offset(2f, 2f),
+                                    blurRadius = 3f
+                                ),
+                                fontSize = 30.sp
+                            ),
+                            color = Color(0xFFFFA500),
                             modifier = Modifier
-                                .size(200.dp)
-                                .height(48.dp)
-                                .weight(1f)
-                                .padding(horizontal = 4.dp),
-                            contentScale = ContentScale.Fit
-                        )
-                        Image(
-                            painter = painterResource(id = R.drawable.menu_removebg_preview),
-                            contentDescription = "Imagen Derecha",
-                            modifier = Modifier
-                                .size(width = 48.dp, height = 36.dp)
-                                .padding(start = 4.dp),
-                            contentScale = ContentScale.Fit
-                        )
-                    }
-                },
-                contenidoExtra = {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.herramientas3),
-                            contentDescription = "Imagen Superior",
-                            modifier = Modifier
-                                .size(250.dp)
-                                .padding(bottom = 16.dp),
-                            contentScale = ContentScale.Fit
+                                .padding(bottom = 8.dp),
+                            textAlign = TextAlign.Center
                         )
                         Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 16.dp),
-                            horizontalArrangement = Arrangement.Center
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceAround,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
                             Image(
-                                painter = painterResource(id = R.drawable.herramientas),
-                                contentDescription = "Imagen Inferior 1",
+                                painter = painterResource(id = R.drawable.iniciars_removebg_preview),
+                                contentDescription = "Imagen Izquierda",
                                 modifier = Modifier
-                                    .weight(1f)
-                                    .height(120.dp)
-                                    .padding(8.dp),
+                                    .size(width = 48.dp, height = 36.dp)
+                                    .padding(end = 4.dp),
                                 contentScale = ContentScale.Fit
                             )
+                            var texto by rememberSaveable { mutableStateOf("") }
+                            OutlinedTextField(
+                                value = texto,
+                                onValueChange = { texto = it },
+                                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+                                label = { Text("Buscar") },
+                                modifier = Modifier.offset(y = 0.dp), // Se ajusta el offset
+                            )
                             Image(
-                                painter = painterResource(id = R.drawable.herramientas2),
-                                contentDescription = "Imagen Inferior 2",
+                                painter = painterResource(id = R.drawable.menu),
+                                contentDescription = "Imagen Derecha",
                                 modifier = Modifier
-                                    .weight(1f)
-                                    .height(120.dp)
-                                    .padding(8.dp),
+                                    .height(50.dp)
+                                    .size(width = 48.dp, height = 36.dp)
+                                    .padding(start = 4.dp),
                                 contentScale = ContentScale.Fit
                             )
                         }
                     }
-                }
-            )
-        }
-        composable(Pantallas.Tercera.route) {
-            PantallaBase(
-                titulo = "",
-                colorFondo = Color(0xFFBBDEFB),
-                textoBoton = "Ir al Inicio",
-                onBotonClick = { navController.navigate(Pantallas.Inicio.route) },
-                mostrarBotonAtras = true,
-                irAtras = { navController.popBackStack() },
-                contenidoSuperior = {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceAround,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.iniciars_removebg_preview),
-                            contentDescription = "Imagen Izquierda",
-                            modifier = Modifier
-                                .size(width = 48.dp, height = 36.dp)
-                                .padding(end = 4.dp),
-                            contentScale = ContentScale.Fit
-                        )
-                        var texto by rememberSaveable { mutableStateOf("") }
-                        OutlinedTextField(
-                            value = texto,
-                            onValueChange = { texto = it },
-                            leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-                            label = { Text("Buscar") },
-                            modifier = Modifier.offset(x= 0.dp, y = 100.dp),
-                        )
-                        Image(
-                            painter = painterResource(id = R.drawable.menu),
-                            contentDescription = "Imagen Derecha",
-                            modifier = Modifier
-                                .height(50.dp)
-                                .size(width = 48.dp, height = 36.dp)
-                                .padding(start = 4.dp),
-                            contentScale = ContentScale.Fit
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(300.dp))
+                    Spacer(modifier = Modifier.height(250.dp)) // Se reduce el Spacer
                 },
                 imagenesInferiores = {
                     Image(
                         painter = painterResource(id = R.drawable.herramientas2_removebg_preview),
                         contentDescription = "Nombre de la App",
-                        modifier = Modifier.offset(y = -100.dp)
+                        modifier = Modifier
+                            .offset(y = -100.dp)
                             .fillMaxWidth()
                             .height(180.dp) // Aumenta la altura
                             .padding(horizontal = 16.dp),
@@ -269,31 +200,7 @@ fun PantallaBase(
             )
             contenidoSuperior?.invoke()
             Spacer(modifier = Modifier.height(8.dp))
-            if (titulo.isNotEmpty()) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = titulo,
-                        style = MaterialTheme.typography.headlineMedium.copy(
-                            shadow = Shadow(
-                                color = Color.Gray,
-                                offset = Offset(2f, 2f),
-                                blurRadius = 3f
-                            ),
-                            fontSize = 30.sp
-                        ),
-                        color = Color(0xFFFFA500),
-                        modifier = Modifier
-                            .padding(start = 8.dp, end = 8.dp, bottom = 16.dp)
-                            .padding(8.dp),
-                        textAlign = TextAlign.Center
-                    )
-                    contenidoExtra?.invoke()
-                }
-            } else {
-                contenidoExtra?.invoke()
-            }
+            contenidoExtra?.invoke()
         } else {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -338,5 +245,104 @@ fun PantallaBase(
                 }
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun InicioPreview() {
+    NavegacionAplimovilTheme {
+        PantallaBase(
+            titulo = "",
+            colorFondo = Color(0xFFBBDEFB),
+            textoBoton = "Iniciar",
+            onBotonClick = { /*TODO*/ },
+            contenidoExtra = {
+                Image(
+                    painter = painterResource(id = R.drawable.logoapp),
+                    contentDescription = "Imagen en la Pantalla de Inicio",
+                    modifier = Modifier.size(250.dp)
+                )
+            },
+            isFirstScreen = true
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SegundaPantallaPreview() {
+    NavegacionAplimovilTheme {
+        PantallaBase(
+            titulo = "", // El título se gestiona dentro de contenidoSuperior para la preview
+            colorFondo = Color(0xFFBBDEFB),
+            textoBoton = "Ir al Inicio",
+            onBotonClick = { /*TODO*/ },
+            mostrarBotonAtras = true,
+            irAtras = { /*TODO*/ },
+            contenidoSuperior = {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = "Novedades",
+                        style = MaterialTheme.typography.headlineMedium.copy(
+                            shadow = Shadow(
+                                color = Color.Gray,
+                                offset = Offset(2f, 2f),
+                                blurRadius = 3f
+                            ),
+                            fontSize = 30.sp
+                        ),
+                        color = Color(0xFFFFA500),
+                        modifier = Modifier
+                            .padding(bottom = 8.dp),
+                        textAlign = TextAlign.Center
+                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceAround,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.iniciars_removebg_preview),
+                            contentDescription = "Imagen Izquierda",
+                            modifier = Modifier
+                                .size(width = 48.dp, height = 36.dp)
+                                .padding(end = 4.dp),
+                            contentScale = ContentScale.Fit
+                        )
+                        var texto by rememberSaveable { mutableStateOf("") }
+                        OutlinedTextField(
+                            value = texto,
+                            onValueChange = { texto = it },
+                            leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+                            label = { Text("Buscar") },
+                            modifier = Modifier.offset(y = 0.dp),
+                        )
+                        Image(
+                            painter = painterResource(id = R.drawable.menu),
+                            contentDescription = "Imagen Derecha",
+                            modifier = Modifier
+                                .height(50.dp)
+                                .size(width = 48.dp, height = 36.dp)
+                                .padding(start = 4.dp),
+                            contentScale = ContentScale.Fit
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(250.dp))
+            },
+            imagenesInferiores = {
+                Image(
+                    painter = painterResource(id = R.drawable.herramientas2_removebg_preview),
+                    contentDescription = "Nombre de la App",
+                    modifier = Modifier
+                        .offset(y = -150.dp)
+                        .fillMaxWidth()
+                        .height(185.dp)
+                        .padding(horizontal = 16.dp),
+                    contentScale = ContentScale.Fit
+                )
+            }
+        )
     }
 }
